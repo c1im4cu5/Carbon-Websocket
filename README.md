@@ -1,5 +1,5 @@
 # Demex-Exchange-Websocket
-Websocket for <app.demex.exchange> - IBC Enabled Blockchain App for 0xcarbon
+Websocket for <https://app.dem.exchange> - IBC Enabled Blockchain App for 0xcarbon
 
 Websocket is currently being designed to operate in conjunction with the Carbon SDK.
 
