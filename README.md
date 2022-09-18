@@ -16,7 +16,7 @@ Remember to alter the .env.default file to the appropriate settings! When resavi
 If you have troubles, please feel free to reach out to me via Telegram: <https://t.me/c1im4cu5>
 
 ## To-Do's
-Tasks : - [x] Develop initial python socket
+        - [x] Develop initial python socket
         - [x] Develop initial subscription
         - [ ] Develop JSON structure for order generation
         - [ ] Alter create_order.ts to pull data via JSON and generate order(s)
