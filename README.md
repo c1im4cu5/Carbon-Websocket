@@ -18,7 +18,7 @@ If you have troubles, please feel free to reach out to me via Telegram: <https:/
 ## To-Do's
         - [x] Develop initial python socket
         - [x] Develop initial subscription
-        - [ ] Develop JSON structure for order generation
+        - [x] Develop JSON structure for order generation
         - [ ] Alter create_order.ts to pull data via JSON and generate order(s)
         - [ ] Further develop socket for more subscription options based on Carbon API
 
