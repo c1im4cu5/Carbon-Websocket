@@ -39,26 +39,26 @@ class DemexConnect:
                         print("Filled Order\nGenerating new order")
                         if d['side'] == "sell":
                             if d['price'] == '9999900000.000000000000000000':
-                                el.update(str(count): {"side": "buy", "qty": d['quantity'], "price": '0.97225'})
+                                el.update({str(count): {"side": "buy", "qty": d['quantity'], "price": '0.97225'}})
                             elif d['price'] == '9959900000.000000000000000000':
-                                el.update(str(count): {"side": "buy", "qty": d['quantity'], "price": '0.96755'})
+                                el.update({str(count): {"side": "buy", "qty": d['quantity'], "price": '0.96755'}})
                             elif d['price'] == '9899900000.000000000000000000':
-                                el.update(str(count): {"side": "buy", "qty": d['quantity'], "price": '0.96001'})
+                                el.update({str(count): {"side": "buy", "qty": d['quantity'], "price": '0.96001'}})
                             elif d['price'] == '9859900000.000000000000000000':
-                                el.update(str(count): {"side": "buy", "qty": d['quantity'], "price": '0.95855'})
+                                el.update({str(count): {"side": "buy", "qty": d['quantity'], "price": '0.95855'}})
                             elif d['price'] == '9799900000.000000000000000000':
-                                el.update(str(count): {"side": "buy", "qty": d['quantity'], "price": '0.94225'})
+                                el.update({str(count): {"side": "buy", "qty": d['quantity'], "price": '0.94225'}})
                         elif d['side']== "buy":
                             if d['price'] == '9722500000.000000000000000000':
-                                el.update(str(count): {"side": "sell", "qty": d['quantity'], "price": '0.99999'})
+                                el.update({str(count): {"side": "sell", "qty": d['quantity'], "price": '0.99999'}})
                             elif d['price'] == '9675500000.000000000000000000':
-                                el.update(str(count): {"side": "sell", "qty": d['quantity'], "price": '0.99599'})
+                                el.update({str(count): {"side": "sell", "qty": d['quantity'], "price": '0.99599'}})
                             elif d['price'] == '9600100000.000000000000000000':
-                                el.update(str(count): {"side": "sell", "qty": d['quantity'], "price": '0.98999'})
+                                el.update({str(count): {"side": "sell", "qty": d['quantity'], "price": '0.98999'}})
                             elif d['price'] == '9585500000.000000000000000000':
-                                el.update(str(count): {"side": "sell", "qty": d['quantity'], "price": '0.98599'})
+                                el.update({str(count): {"side": "sell", "qty": d['quantity'], "price": '0.98599'}})
                             elif d['price'] == '9422500000.000000000000000000':
-                                el.update(str(count): {"side": "sell", "qty": d['quantity'], "price": '0.97999'})
+                                el.update({str(count): {"side": "sell", "qty": d['quantity'], "price": '0.97999'}})
                     elif d['status'] == 'closed':
                         print("Closed Order. No Execution Required. Returing to monitor status...")
 
