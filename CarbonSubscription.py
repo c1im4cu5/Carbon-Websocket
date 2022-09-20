@@ -1,15 +1,43 @@
 from CarbonWebsocket import Carbon_Websocket
 import asyncio
+import requests
 import json
 import os
 
 class CarbonConnect:
     def __init__(self):
-        self.orders = []
+
+        #Request to receive initial orderbook
+        headers = {
+            'accept': 'application/json',
+        }
+        response = requests.get('https://api.carbon.network/carbon/book/v1/books', headers=headers)
+        self.books = response.json()
 
     #On successful connection
     async def on_connect(self):
-        return await demex.subscribe("Subscription", [f"orders:{'<SWTH ADDRESS>'}"])
+
+        #Users should alter the <SWTH ADDRESS> to represent their actual SWTH address
+        #return await carbon.subscribe("Subscription", [f"orders:{'<SWTH ADDRESS>'}"])
+
+        #Example Subscription with address and Books
+        return await carbon.subscribe("Subscription", [f"orders:{'swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu'}", f"books:{'eth1_usdc1'}"])
+
+    #On error
+    #Unsubscribe to websocket
+    #Print
+    async def on_error(self):
+        #Unsubscribe on error
+        print("Websocket Error...\n\nUnsubscribing.")
+
+        #Users should replace the <TEXT> with the appropriate data see below for another example
+        #await demex.unsubscribe("Subscription", [f"orders:{'<SWTH ADDRESS>'}", f"books:{'<MARKET>'}"])
+
+        #Example unsubscribe with swth address
+        await carbon.unsubscribe("Subscription", [f"orders:{'swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu'}", f"books:{'eth1_usdc1'}"])
+
+        print("Socket Closed")
+
 
     #Receiving feed from websocket
     async def on_receive(self, records: dict):
@@ -23,6 +51,12 @@ class CarbonConnect:
             #Wallet Orders
             #Check if orders in record
             print("Verifying channel...")
+
+            if 'books:' in records['channel']:
+
+                #Books bots are in the beginning stages of development.
+                #It is anticipated we'll move https://github.com/c1im4cu5/Demex-Trading-Bot strategies
+                print("Books received")
 
             #Subscription stream will begin with "orders.<SWTH ADDRESS>". Search records for text
             if 'orders:' in records['channel']:
@@ -103,10 +137,10 @@ class CarbonConnect:
     async def main(self):
         #Gather tasks for running concurrently
         asyncio.gather(
-                        asyncio.get_event_loop().run_until_complete(await demex.connect(self.on_receive, self.on_connect)),
+                        asyncio.get_event_loop().run_until_complete(await carbon.connect(self.on_receive, self.on_connect, self.on_error)),
                         )
 
 if __name__ == "__main__":
-    demex: Carbon_Websocket = Carbon_Websocket('wss://ws-api.carbon.network/ws')
+    carbon: Carbon_Websocket = Carbon_Websocket('wss://ws-api.carbon.network/ws')
     objName = CarbonConnect()
     asyncio.run(objName.main())

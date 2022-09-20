@@ -15,12 +15,24 @@ class Carbon_Websocket:
             "params": {"channels": channels}
         })
 
+    async def unsubscribe(self, message_id: str, channels: List[str]):
+        await self.send({
+            "id": message_id,
+            "method": "unsubscribe",
+            "params": {"channels": channels}
+        })
+
     async def subscribe_orders(self, message_id: str, swth_address: str, market: Optional[str] = None):
             if market:
                 channel_name: str = f"orders_by_market.{market}.{swth_address}"
             else:
                 channel_name: str = f"orders.{swth_address}"
             await self.subscribe(message_id, [channel_name])
+
+    async def subscribe_books(self, message_id: str, market: str):
+        channel_name: str = f"books:{market}"
+        await self.subscribe(message_id, [channel_name])
+
 
     async def send(self, data: dict):
         await self._websocket.send(json.dumps(data))
