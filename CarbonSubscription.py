@@ -1,9 +1,9 @@
-from DemexWebsocket import Demex_Websocket
+from CarbonWebsocket import Carbon_Websocket
 import asyncio
 import json
 import os
 
-class DemexConnect:
+class CarbonConnect:
     def __init__(self):
         self.orders = []
 
@@ -107,6 +107,6 @@ class DemexConnect:
                         )
 
 if __name__ == "__main__":
-    demex: Demex_Websocket = Demex_Websocket('wss://ws-api.carbon.network/ws')
-    objName = DemexConnect()
+    demex: Carbon_Websocket = Carbon_Websocket('wss://ws-api.carbon.network/ws')
+    objName = CarbonConnect()
     asyncio.run(objName.main())
