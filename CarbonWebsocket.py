@@ -2,7 +2,7 @@ from typing import Optional, List, Callable
 import websockets
 import json
 
-class Demex_Websocket:
+class Carbon_Websocket:
     def __init__(self, uri: str, ping_interval: Optional[int] = 10, ping_timeout: Optional[int] = 30):
         self._uri: str = uri
         self._ping_interval: int = ping_interval
