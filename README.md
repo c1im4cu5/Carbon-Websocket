@@ -25,6 +25,7 @@ If you have troubles, please feel free to reach out to me via Telegram: <https:/
         - [x] Develop JSON structure for order generation
         - [x] Alter create_order.ts to pull data via JSON and generate order(s)
         - [ ] Further develop socket for more subscription options based on Carbon API
+        - [ ] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition socket to http POST request for order generation
 
 ## Donations are Always Welcome
 We appreciate the Carbon Community and are always thankful for any donations! Here is our "SWTH" Carbon Address: swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu
