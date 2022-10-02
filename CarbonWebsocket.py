@@ -3,10 +3,11 @@ import websockets
 import json
 
 class Carbon_Websocket:
-    def __init__(self, uri: str, ping_interval: Optional[int] = 10, ping_timeout: Optional[int] = 30):
+    def __init__(self, uri: str, ping_interval: Optional[int] = 10, ping_timeout: Optional[int] = 30, close_timeout: Optional[int] = 10):
         self._uri: str = uri
         self._ping_interval: int = ping_interval
         self._ping_timeout: int = ping_timeout
+        self._close_timeout: int = close_timeout
 
     async def subscribe(self, message_id: str, channels: List[str]):
         await self.send({
@@ -58,7 +59,8 @@ class Carbon_Websocket:
         try:
             async with websockets.connect(self._uri,
                                           ping_interval=self._ping_interval,
-                                          ping_timeout=self._ping_timeout) as websocket:
+                                          ping_timeout=self._ping_timeout,
+                                          close_timeout=self._close_timeout) as websocket:
                 self._websocket = websocket
 
                 if on_connect_callback:
