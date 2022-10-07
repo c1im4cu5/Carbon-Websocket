@@ -34,6 +34,52 @@ class Carbon_Websocket:
         channel_name: str = f"books:{market}"
         await self.subscribe(message_id, [channel_name])
 
+    async def subscribe_pools(self, message_id: str,  id: Optional[str] = None):
+        """
+        Expected Return result for this function is as follows:
+
+        {'block_height': 32199893,
+        'channel': 'pools',
+        'result': {
+            '47': {
+                'pool': {
+                    'creator': 'swth1as3wkrr9mfju4edvpaa8ln44rz9guyacn88888',
+                    'id': 47,
+                    'name': '50% IBC/A4DB47A9D3CF9A068D454513891B526702455D3EF08FB9EB558C561F9DC2B701 / 50% SWTH Pool',
+                    'denom': 'clpt/47', 'denom_a': 'ibc/A4DB47A9D3CF9A068D454513891B526702455D3EF08FB9EB558C561F9DC2B701',
+                    'amount_a': '1869222802',
+                    'weight_a': '0.500000000000000000',
+                    'denom_b': 'swth', 'amount_b': '355396117426371',
+                    'weight_b': '0.500000000000000000',
+                    'swap_fee': '0.001000000000000000',
+                    'num_quotes': 10, 'shares_amount':
+                    '812111385717', 'market': 'ATOM_SWTH'
+                        },
+            'rewards_weight': '4',
+            'total_commitment': '1591689895229'
+                    }
+                    }
+        }
+
+        Request get_pools
+
+        .. note::
+            The id is optional and acts as a filter.
+
+        .. warning::
+            method was tested 5-10-2022
+
+        :param message_id: Identifier that will be included in the websocket message response to allow the subscriber to
+                           identify which channel the notification is originated from.
+        :param id: Carbon Pool ID
+        :return: None
+        """
+        
+        if id:
+            channel_name: str = f"pools_by_id:{id}"
+        else:
+            channel_name: str = f"poools"
+        await self.subscribe(message_id, [channel_name])
 
     async def send(self, data: dict):
         await self._websocket.send(json.dumps(data))
