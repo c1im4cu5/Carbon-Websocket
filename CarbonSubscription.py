@@ -1,32 +1,66 @@
 from DemexWebsocket import Demex_Websocket
-from collections import OrderedDict
 import asyncio
 import requests
 import json
 import os
 
 class DemexConnect:
+
+    #On Object Initiation
     def __init__(self):
+
+        #Define json headers for http orderbook request
         headers = {
             'accept': 'application/json',
         }
-        response = requests.get('https://api.carbon.network/carbon/book/v1/books', headers=headers)
-        self.books = response.json()
-        print(self.books)
 
+        #Get API request to Carbon Network for Orderbook snapshot
+        response = requests.get('https://api.carbon.network/carbon/book/v1/books', headers=headers)
+
+        #Respons to Json
+        self.books = response.json()
+
+        #Print Markets
         for i in self.books['books']:
             print(i['market'])
 
     #On successful connection
     async def on_connect(self):
+        #Notes - On_Connect Subscription
         #User should remove the <SWTH ADDRESS> and input their own
-        #Multiple examples of different subscriptions
-        return await demex.subscribe("Subscription", [f"orders:{'swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu'}", f"books:{'eth1_usdc1'}"])
-        #return await demex.subscribe("Subscription", [f"market_stats:{'swth_usdc1'}"])
-        #return await demex.subscribe("Subscription", [f"balances:{'swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu'}"])
 
-        #Books subscription requires an initial request; which has not yet been built
+        #Pools Subscription - Confirmed Working 5-10-22
+        #return await demex.subscribe("Subscription", [f"pools"])
+
+        #Subscribing to multiple channels (Orders and Books)
+        #return await demex.subscribe("Subscription", [f"orders:{'<SWTH ADDRESS>'}", f"books:{'eth1_usdc1'}"])
+
+        #Books subscription requires an initial request for a single orderbook; which has not yet been built
         #return await demex.subscribe("Subscription", [f"books:{'swth_usdc1'}"])
+
+        #Books subscription - Multiple Markets
+        #Built in preparation for orderbook monitoring
+        #Notes - Orderbook Monitoring:
+        #We retrieve the initial orderbook via http request on __init__ under self.books)
+        return await demex.subscribe("Subscription", [
+                                        f"books:{'swth_usdc1'}",
+                                        f"books:{'swth_busd1'}",
+                                        f"books:{'ETHUSDC_PERP'}",
+                                        f"books:{'WBTCUSDC_PERP'}",
+                                        f"books:{'eth1_usdc1'}",
+                                        f"books:{'wbtc1_usdc1'}",
+                                        f"books:{'eth1_wbtc1'}",
+                                        f"books:{'wbtc1_btcb1'}",
+                                        f"books:{'busd1_usdt1'}",
+                                        f"books:{'AAVE_BUSD'}",
+                                        f"books:{'APE_BUSD'}",
+                                        f"books:{'ATOM_BUSD'}",
+                                        f"books:{'ATOM_SWTH'}",
+                                        f"books:{'EVMOS_BUSD'}",
+                                        f"books:{'busd1_usdc1'}",
+                                        f"books:{'bnb1_busd1'}",
+                                        f"books:{'bnb1_eth1'}"
+                                        ])
 
     #On successful connection
     async def on_error(self, err):
@@ -34,45 +68,89 @@ class DemexConnect:
         print("Websocket Error...\n.............\n")
         print(err)
         print("Restarting Socket...\n")
-        demex: Demex_Websocket = Demex_Websocket('wss://ws-api.carbon.network/ws')
-        objName = DemexConnect()
-        asyncio.run(objName.main())
+        return await demex.unsubscribe("Subscription", [
+                                        f"books:{'swth_usdc1'}",
+                                        f"books:{'swth_busd1'}",
+                                        f"books:{'ETHUSDC_PERP'}",
+                                        f"books:{'WBTCUSDC_PERP'}",
+                                        f"books:{'eth1_usdc1'}",
+                                        f"books:{'wbtc1_usdc1'}",
+                                        f"books:{'eth1_wbtc1'}",
+                                        f"books:{'wbtc1_btcb1'}",
+                                        f"books:{'busd1_usdt1'}",
+                                        f"books:{'AAVE_BUSD'}",
+                                        f"books:{'APE_BUSD'}",
+                                        f"books:{'ATOM_BUSD'}",
+                                        f"books:{'ATOM_SWTH'}",
+                                        f"books:{'EVMOS_BUSD'}",
+                                        f"books:{'busd1_usdc1'}",
+                                        f"books:{'bnb1_busd1'}",
+                                        f"books:{'bnb1_eth1'}"
+                                        ])
 
 
     #Receiving feed from websocket
     async def on_receive(self, records: dict):
 
-        print(records)
-
         #Check if "Channel" is in records (Initial response will be missing "Channel")
         if 'channel' in records:
-            count = 0
 
-            print("Channel: " + records['channel'])
-            #Wallet Orders
-            #Check if orders in record
-            print("Verifying channel...")
-
+            #Checking type of received message
+            #Checking for orderbook message
             if 'books:' in records['channel']:
-
                 print("Channel: Books\nUpdating Orderbook...")
-                """for r in records['result']:
-                    for d in self.books:
-                        #bid = Buy
-                        #ask = sell
-                        if  r['market'] == d['market']:
+                #Iterating over received dict
+                for r in records['result']:
+                    #Iterating over list value from key in dict
+                    for m in self.books['books']:
+                        #If message market = stored orderbook market
+                        if  r['market'] == m['market']:
+                            #If message side is buy
                             if r['side'] == 'buy':
-                                for i in d['bids']:"""
-
-
+                                print("BUY: ", r)
+                                #Iterate over list of dicts (orderbook) - bids=buy
+                                for i in m['bids']:
+                                    #If message price equals bid dict price
+                                    if r['price'] == i['price']:
+                                        #If messae type is update
+                                        if r['type'] == "update":
+                                            #Update total_quantity of price by adding positive/negative
+                                            i['total_quantity'] = str(float(i['total_quantity']) + float(r['quantity']))
+                                        #If message type is new
+                                        elif r['type'] == "new":
+                                            #Append bids list with dict of newly added orderbook price and quantity
+                                            #Notes:
+                                            #Need to reorder sequence and/or insert into OrderedDict
+                                            #Orders is left emptpy, but could be populated. Initial http response possesses order list with hashes as values
+                                            m['bids'].append({"price" : r['price'], "total_quantity": r['quantity'], "orders": []})
+                                        #If message type is delete
+                                        elif r['type'] == "delete":
+                                            #Delete dict from list in stored orderbook
+                                            del i
+                            #If message side is sell
+                            if r['side'] == 'sell':
+                                print("SELL: ", r)
+                                #Iterate over list of dicts (orderbook) asks=sell
+                                for i in m['asks']:
+                                    #If message prices equals dict price
+                                    if r['price'] == i['price']:
+                                        #If message type is update
+                                        if r['type'] == "update":
+                                            #Update total_quantity of price by adding positive/negatives
+                                            i['total_quantity'] = str(float(i['total_quantity']) + float(r['quantity']))
+                                        #If message type is new
+                                        elif r['type'] == "new":
+                                            #Append asks list with dict of newly added orderbook price and quantity
+                                            m['asks'].append({"price" : r['price'], "total_quantity": r['quantity'], "orders": []})
+                                        #If message type is delete
+                                        elif r['type'] == "delete":
+                                            #Delete dict from list in orderbook
+                                            del i
 
 
             if 'orders:' in records['channel']:
-                print("Channel: Order\nSearching order status...")
-                #Load options.json file
-                el= OrderedDict()
-                with open("orders.json", "r") as read_file:
-                    array = json.load(read_file, object_pairs_hook=OrderedDict)
+                print("Searching order status...")
+                array : list = []
                 for d in records['result']:
 
                     if d['status'] == 'open':
@@ -117,41 +195,39 @@ class DemexConnect:
                             if d['side'] == "sell":
                                 # price =0.995 = "0.000000000000995000"
                                 # qty = $1.00 USDC = "1000000000000000000"
-                                if d['price'] == "0.000000000001001500":
+                                if d['price'] == "0.000000000001002500":
                                     array.append({"market": "busd1_usdc1", "side": "Buy", "qty": "95000000000000000000", "price": '0.000000000000996800'})
-                                elif d['price'] == "0.000000000000999900":
+                                elif d['price'] == "0.000000000001000300":
                                     array.append({"market": "busd1_usdc1","side": "Buy", "qty": "20000000000000000000", "price":  "0.000000000000999000"})
-                                elif d['price'] == "0.000000000001000200":
+                                elif d['price'] == "0.000000000001000600":
                                     array.append({"market": "busd1_usdc1","side": "Buy", "qty": "40000000000000000000", "price": "0.000000000000998600"})
-                                elif d['price'] == "0.000000000001000500":
+                                elif d['price'] == "0.000000000001000900":
                                     array.append({"market": "busd1_usdc1","side": "Buy", "qty": "50000000000000000000", "price": "0.000000000000998200"})
-                                elif d['price'] == "0.000000000001000800":
+                                elif d['price'] == "0.000000000001001300":
                                     array.append({"market": "busd1_usdc1","side": "Buy", "qty": "70000000000000000000", "price": "0.000000000000997800"})
-                                elif d['price'] == "0.000000000001001100":
+                                elif d['price'] == "0.000000000001001900":
                                     array.append({"market": "busd1_usdc1","side": "Buy", "qty": "70000000000000000000", "price": "0.000000000000997400"})
 
                             elif d['side']== "buy":
                                 if d['price'] == "0.000000000000996800":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "95000000000000000000", "price": "0.000000000001001500"})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "95000000000000000000", "price": "0.000000000001002500"})
                                 elif d['price'] == "0.000000000000999000":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "20000000000000000000", "price": '0.000000000000999900'})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "20000000000000000000", "price": '0.000000000001000300'})
                                 elif d['price'] == "0.000000000000998600":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "40000000000000000000", "price": '0.000000000001000200'})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "40000000000000000000", "price": '0.000000000001000600'})
                                 elif d['price'] == "0.000000000000998200":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "50000000000000000000", "price": '0.000000000001000500'})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "50000000000000000000", "price": '0.000000000001000900'})
                                 elif d['price'] == "0.000000000000997800":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "70000000000000000000", "price": '0.000000000001000800'})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "70000000000000000000", "price": '0.000000000001001300'})
                                 elif d['price'] == "0.000000000000997400":
-                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "70000000000000000000", "price": '0.000000000001001100'})
+                                    array.append({"market": "busd1_usdc1","side": "Sell", "qty": "70000000000000000000", "price": '0.000000000001001900'})
 
-                            #Load options.json file
-                            with open("orders.json", "w") as fout:
-                                json.dump(array, fout)
+                            #Sending post request to ts server
+                            print("Initiating Post Request to localhost:3000/trade")
+                            requests.post(self.url, data=json.dumps(array), headers=headers)
 
-                            print("Initiating Typescript Order File...")
-
-                            #Run ts-node file command line
-                            os.system("ts-node examples/create_orders.ts")
+                            #Notification of process end
+                            print("Post request sent to server.")
 
                     elif d['status'] == 'closed':
                         print("Closed Order. No Execution Required. Returing to monitor status...")

@@ -5,81 +5,93 @@ import { MsgCreateOrder } from "../lib/codec/order/tx";
 import { CarbonTx } from "../lib/util";
 import { CarbonSDK } from "./_sdk";
 import "./_setup";
-import data from '../orders.json';
+import { ServerResponse, IncomingMessage } from "http";
 
-var path = require('path');
-var rootDirname = path.basename(path.dirname("orders.json")); // the parent of the root path
 
-(async () => {
+const performTrades = (req: IncomingMessage, res: ServerResponse) => {
+  // Read the data from the request
+  let data = "";
 
-  console.log("Orders Initiated...")
-  console.log("Testing Data: ", data)
-
-  const mnemonics = process.env.MNEMONICS ?? BIP39.generateMnemonic();
-  console.log("Mnemonic: ", mnemonics);
-
-  const sdk = await CarbonSDK.instance({
-    network: CarbonSDK.Network.MainNet,
-    /*config: {
-      tmRpcUrl: process.env.TRPC_ENDPOINT,
-    },*/
+  req.on("data", (chunk) => {
+    //Parserequest data into string
+    data += chunk.toString();
   });
-  const connectedSDK = await sdk.connectWithMnemonic(mnemonics);
-  console.log("Carbon SDK Connected");
 
-  for (var i = 0; i < data.length; ++i) {
-    var m = data[i].market;
-    var p = data[i].price;
-    var q = data[i].qty;
+  // When the request is done
+  req.on("end", () => {
 
-    console.log("Price: ", p);
-    console.log("Qty: ", q);
+    //Parse Data to JSON
+    let task = JSON.parse(data);
 
-    if (data[i].side == "Buy"){
+    //Initiate Order Generation
+    (async () => {
 
-      console.log("Generating Carbon Order...")
-      // create an order using Order Module
-      // for better input type checking
-      const moduleCallResult = await connectedSDK.order.create({
-        market: m,
-        orderType: OrderModule.OrderType.Limit,
-        price: new BigNumber(p),
-        quantity: new BigNumber(q),
-        side: OrderModule.OrderSide.Buy,
+      //Log information to console
+      console.log("Orders Initiated...")
+      console.log("Testing Data: ", data)
+
+      //Pull Mnemonic from .env file and print to console
+      const mnemonics = process.env.MNEMONICS ?? BIP39.generateMnemonic();
+      console.log("Mnemonic: ", mnemonics);
+
+      //Carbon.SDK connection instance
+      const sdk = await CarbonSDK.instance({
+        network: CarbonSDK.Network.MainNet,
+        /*config: {
+          tmRpcUrl: process.env.TRPC_ENDPOINT,
+        },*/
       });
-      console.log("Call from Module: \n", moduleCallResult);
-    }
 
-    if (data[i].side == "Sell"){
+      //Connect SDK with mnemonic and print successful conn status
+      const connectedSDK = await sdk.connectWithMnemonic(mnemonics);
+      console.log("Carbon SDK Connected");
 
-      console.log("Generating Carbon Order...")
-      // create an order using Order Module
-      // for better input type checking
-      const moduleCallResult = await connectedSDK.order.create({
-        market: m,
-        orderType: OrderModule.OrderType.Limit,
-        price: new BigNumber(p),
-        quantity: new BigNumber(q),
-        side: OrderModule.OrderSide.Sell,
-      });
-      console.log("Call from Module: \n", moduleCallResult);
-    }
+      //Loop over json object (Array of Dicts) to generate orders based on dict parms
+      for (var i = 0; i < task.length; ++i) {
 
-    delete data[i];
-  }
+        //Pull Market, Price and Qty
+        var m = task[i].market;
+        var p = task[i].price;
+        var q = task[i].qty;
 
-  var filtered = data.filter(function (el) {
-    return el != null;
+        //Generate Orders based on Buy vs Sell for Order Module Use (Ease)
+        if (task[i].side == "Buy"){
+
+          console.log("Generating Carbon Order...")
+          // create an order using Order Module
+          // for better input type checking
+          const moduleCallResult = await connectedSDK.order.create({
+            market: m,
+            orderType: OrderModule.OrderType.Limit,
+            price: new BigNumber(p),
+            quantity: new BigNumber(q),
+            side: OrderModule.OrderSide.Buy,
+          });
+          console.log("Call from Module: \n", moduleCallResult);
+        }
+
+        if (task[i].side == "Sell"){
+
+          console.log("Generating Carbon Order...")
+          // create an order using Order Module
+          // for better input type checking
+          const moduleCallResult = await connectedSDK.order.create({
+            market: m,
+            orderType: OrderModule.OrderType.Limit,
+            price: new BigNumber(p),
+            quantity: new BigNumber(q),
+            side: OrderModule.OrderSide.Sell,
+          });
+          console.log("Call from Module: \n", moduleCallResult);
+        }
+
+      //END LOOP
+      }
+    //END ASYNC FUNCTION
+    });//().catch(console.error).finally(() => process.exit(0));
+  //END REQ.ON
   });
+//END performTrades
+};
 
-  var fs = require('fs');
-  var f = rootDirname + "/orders.json"
-
-  fs.writeFileSync(f, JSON.stringify(filtered), 'utf8', function(err: String) {
-    if (err) {
-              return console.error(err);
-              }
-    console.log("File created!");
-  });
-
-})().catch(console.error).finally(() => process.exit(0));
+export { performTrades };
