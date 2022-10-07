@@ -15,17 +15,30 @@ Remember to alter the .env.default file to the appropriate settings! When resavi
 
 Furthermore, during the install process of the Carbon SDK, you may notice the install doesn't complete correctly. This is likely because you don't have the Cosmos SDK installed.
 
-Filed labeled "create_orders.ts" should be uploaded to the examples file of the Carbon SDK. Files labeled orders.json, CarbonSubscription.py and CarbonWebsocket.py can be uploaded to the root directory of the SDK.
+Files labeled CarbonSubscription.py and CarbonWebsocket.py can be place together in any directory.
+
+File labeled create_orders.ts should be uploaded to the examples file of the Carbon SDK.
+
+File labeled server.ts should be uploaded to the root directory of Carbon SDK.
+
+Run Server:
+ts-node server.ts
 
 If you have troubles, please feel free to reach out to me via Telegram: <https://t.me/c1im4cu5>
 
-## To-Do's
+## Enhancements
         - [x] Develop initial python socket
         - [x] Develop initial subscription
         - [x] Develop JSON structure for order generation
         - [x] Alter create_order.ts to pull data via JSON and generate order(s)
-        - [ ] Further develop socket for more subscription options based on Carbon API
-        - [ ] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition socket to http POST request for order generation
+        - [-] Further develop socket for more subscription options based on Carbon API
+        - [x] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition socket to http POST request for order generation
+        - [x] Subscription and maintaining complete 0xcarbon (Token: SWTH) orderbook
+        - [ ] Reformat price and quantity with base_precision and quote_precision
+        - [ ] Transition Demex-Trading-Bot from c1im4cu5 (on-exchange arbitrage)
 
 ## Donations are Always Welcome
 We appreciate the Carbon Community and are always thankful for any donations! Here is our "SWTH" Carbon Address: swth1dwdvy48exj22st0zvwk8s3k9tfnksrj9v7fhuu
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you'd like to added/altered.
