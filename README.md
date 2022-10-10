@@ -4,7 +4,7 @@ Order Subscription Python Websocket for <https://app.dem.exchange> - IBC Enabled
 Websocket is currently being designed to operate in conjunction with the Carbon SDK.
 
 ## Goal
-Stable Pair Grid Bots (WBTC-BTCB, USDC-BUSD)
+Stable Pair Grid Bots (WBTC-BTCB, BUSD-USDC)
 
 ## Instructions for Order Generation
 While the Python websocket can be easily run without the Carbon SDK, if you are looking to use the socket for order generation, the files will neeed to be uploaded to the Carbon SDK; which also means you will need to install it.
