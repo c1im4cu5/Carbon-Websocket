@@ -11,11 +11,9 @@ const server = http.createServer((req, res) => {
     return getTasks(req, res);
   }
 
-
   // Post request to perform trades
   if (req.method == "POST" && req.url == "/trade") {
     performTrades(req, res);
-    res.status(200).send('Status: OK');
   }
 });
 
