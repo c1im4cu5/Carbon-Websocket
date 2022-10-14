@@ -4,10 +4,10 @@ Order Subscription Python Websocket for <https://app.dem.exchange> - IBC Enabled
 Websocket is currently being designed to operate in conjunction with the Carbon SDK.
 
 ## Goal
-Stable Pair Grid Bots (WBTC-BTCB, USDC-BUSD)
+Stable Pair Grid Bots (WBTC-BTCB, BUSD-USDC)
 
 ## Instructions for Order Generation
-While the Python websocket can be easily run without the Carbon SDK, if you are looking to use the socket for order generation, the files will neeed to be uploaded to the Carbon SDK; which also means you will need to install it.
+While the Python websocket can be easily run without the Carbon SDK, if you are looking to use the Websocket for order generation, the files will neeed to be uploaded to the Carbon SDK; which also means you will need to install it.
 
 <https://github.com/Switcheo/carbon-js-sdk>
 
@@ -27,12 +27,12 @@ ts-node server.ts
 If you have troubles, please feel free to reach out to me via Telegram: <https://t.me/c1im4cu5>
 
 ## Enhancements
-        - [x] Develop initial python socket
+        - [x] Develop initial python Websocket
         - [x] Develop initial subscription
         - [x] Develop JSON structure for order generation
         - [x] Alter create_order.ts to pull data via JSON and generate order(s)
-        - [-] Further develop socket for more subscription options based on Carbon API
-        - [x] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition socket to http POST request for order generation
+        - [-] Further develop Websocket for more subscription options based on Carbon API
+        - [x] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition Websocket to http POST request for order generation
         - [x] Subscription and maintaining complete 0xcarbon (Token: SWTH) orderbook
         - [ ] Reformat price and quantity with base_precision and quote_precision
         - [ ] Transition Demex-Trading-Bot from c1im4cu5 (on-exchange arbitrage)
