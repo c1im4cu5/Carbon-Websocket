@@ -28,7 +28,7 @@ ts-node server.ts
 
 Open new Terminal Window and Run CarbonSubscription.py
 ```
-python app.py
+python CarbonSubscription.py
 ```
 If you have troubles, please feel free to reach out to me via Telegram: <https://t.me/c1im4cu5>
 
