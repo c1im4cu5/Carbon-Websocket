@@ -67,27 +67,6 @@ class DemexConnect:
         #Unsubscribe on error
         print("Websocket Error...\n.............\n")
         print(err)
-        print("Restarting Socket...\n")
-        return await demex.unsubscribe("Subscription", [
-                                        f"books:{'swth_usdc1'}",
-                                        f"books:{'swth_busd1'}",
-                                        f"books:{'ETHUSDC_PERP'}",
-                                        f"books:{'WBTCUSDC_PERP'}",
-                                        f"books:{'eth1_usdc1'}",
-                                        f"books:{'wbtc1_usdc1'}",
-                                        f"books:{'eth1_wbtc1'}",
-                                        f"books:{'wbtc1_btcb1'}",
-                                        f"books:{'busd1_usdt1'}",
-                                        f"books:{'AAVE_BUSD'}",
-                                        f"books:{'APE_BUSD'}",
-                                        f"books:{'ATOM_BUSD'}",
-                                        f"books:{'ATOM_SWTH'}",
-                                        f"books:{'EVMOS_BUSD'}",
-                                        f"books:{'busd1_usdc1'}",
-                                        f"books:{'bnb1_busd1'}",
-                                        f"books:{'bnb1_eth1'}"
-                                        ])
-
 
     #Receiving feed from websocket
     async def on_receive(self, records: dict):
