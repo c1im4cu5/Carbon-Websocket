@@ -15,15 +15,21 @@ Remember to alter the .env.default file to the appropriate settings! When resavi
 
 Furthermore, during the install process of the Carbon SDK, you may notice the install doesn't complete correctly. This is likely because you don't have the Cosmos SDK installed.
 
-Files labeled CarbonSubscription.py and CarbonWebsocket.py can be place together in any directory.
+Files labeled CarbonSubscription.py and CarbonWebsocket.py should be placed together in the root directory.
 
 File labeled create_orders.ts should be uploaded to the examples file of the Carbon SDK.
 
 File labeled server.ts should be uploaded to the root directory of Carbon SDK.
 
-Run Server:
+Run TS Server in Terminal Window:
+```
 ts-node server.ts
+```
 
+Open new Terminal Window and Run CarbonSubscription.py
+```
+python app.py
+```
 If you have troubles, please feel free to reach out to me via Telegram: <https://t.me/c1im4cu5>
 
 ## Enhancements
@@ -34,7 +40,8 @@ If you have troubles, please feel free to reach out to me via Telegram: <https:/
         - [-] Further develop Websocket for more subscription options based on Carbon API
         - [x] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition Websocket to http POST request for order generation
         - [x] Subscription and maintaining complete 0xcarbon (Token: SWTH) orderbook
-        - [ ] Reformat price and quantity with base_precision and quote_precision
+        - [-] Reformat price and quantity with base_precision and quote_precision - handlers.py
+        - [ ] Requirements.txt for Python server
         - [ ] Transition Demex-Trading-Bot from c1im4cu5 (on-exchange arbitrage)
 
 ## Donations are Always Welcome
