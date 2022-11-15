@@ -366,6 +366,11 @@ class Carbon_Websocket:
         channel_name: str = f"candlesticks:{market}:{granularity}"
         await self.subscribe(message_id, [channel_name])
 
+    async def subscribe_commitments(self, message_id: str, swth_address: str) -> dict:
+
+        channel_name: str = f"commitments:{swth_address}"
+        await self.subscribe(message_id, [channel_name])
+
     async def send(self, data: dict):
         await self._websocket.send(json.dumps(data))
 

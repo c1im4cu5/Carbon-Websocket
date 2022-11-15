@@ -31,7 +31,7 @@ If you have troubles, please feel free to reach out to me via Telegram: <https:/
         - [x] Develop initial subscription
         - [x] Develop JSON structure for order generation
         - [x] Alter create_order.ts to pull data via JSON and generate order(s)
-        - [-] Further develop Websocket for more subscription options based on Carbon API
+        - [x] Further develop Websocket for more subscription options based on Carbon API
         - [x] Build basic TS POST API to monitor for orders (Currently run haphazardly) and transition Websocket to http POST request for order generation
         - [x] Subscription and maintaining complete 0xcarbon (Token: SWTH) orderbook
         - [ ] Reformat price and quantity with base_precision and quote_precision
