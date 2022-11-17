@@ -46,30 +46,50 @@ import "./examples/_setup";
 
     //Pull Object Data from result
     const r = result.data;
+
+    //Result.data is received as type unknown. Turn it into a string
     const s = JSON.stringify(r);
+
+    //Parse JSON string into dictionary
     const d = JSON.parse(s);
 
+    //Blank list to push new order dicts
     const new_orders = []
 
     //Pull Result (list of orders)
     let orders = d.result;
+
+    //Define Orders type from dict order type
     let order: keyof typeof orders;
 
+    //For loop - orders in result
     for (order in orders){
+
+      //if order status is open
       if (orders[order]["status"] == "open"){
         console.log("Open Order Received. No action performed.");
       };
+
+      //if order status is filled -- generate new order
       if (orders[order]['status'] == "filled"){
+
+        //Notify console of new order generation
         console.log("Filled Order\nPreparing New Order(s)");
+
+        //Check market of filled order (BUSD-USDC)
         if (orders[order]['market'] == "busd1_usdc1"){
+
+          //If BUSD-USDC order was a buy -> Generate sell
           if (orders[order]['side'] == "buy"){
-
+            console.log("LOG SELL ORDER");
+            //new_orders.push({})
           };
-          if (orders[order]['side'] == "sell"){
 
+          //IF BUSD-USDC order was a sell -> Generate buy
+          if (orders[order]['side'] == "sell"){
+            console.log("LOG BUY ORDER");
           };
         };
-        //new_orders.push({})
       };
       if (orders[order]['status'] == "closed"){
         console.log("Closed Order");
