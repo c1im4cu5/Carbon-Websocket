@@ -59,7 +59,7 @@ class DemexConnect:
                                         f"books:{'EVMOS_BUSD'}",
                                         f"books:{'busd1_usdc1'}",
                                         f"books:{'bnb1_busd1'}",
-                                        f"books:{'bnb1_eth1'}"
+                                        f"books:{'bnb1_eth1'}",
                                         ])
 
     #On successful connection
@@ -70,6 +70,8 @@ class DemexConnect:
 
     #Receiving feed from websocket
     async def on_receive(self, records: dict):
+
+        print(records)
 
         #Check if "Channel" is in records (Initial response will be missing "Channel")
         if 'channel' in records:
