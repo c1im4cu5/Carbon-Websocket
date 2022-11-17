@@ -43,7 +43,7 @@ python CarbonSubscription.py
 The single file, websocket.ts, can be uploaded to the root directory of the Carbon SDK. It is currently incomplete. See Enhancements section.
 
 ```
-ts-node server.ts
+ts-node websocket.ts
 ```
 
 ### Enhancements to Typescript
